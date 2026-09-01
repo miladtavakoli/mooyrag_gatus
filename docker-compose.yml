@@ -1,0 +1,57 @@
+services:
+  gatus:
+    image: twinproduction/gatus:latest
+    container_name: gatus
+    restart: unless-stopped
+
+    ports:
+      - "127.0.0.1:9090:8080"
+
+    volumes:
+      - ./gatus/config.yaml:/config/config.yaml:ro
+      - ./gatus/data:/data
+
+    environment:
+      TZ: Asia/Tehran
+      GOMAXPROCS: "2"
+    env_file:
+    - .env
+
+    cpus: "0.25"
+    mem_limit: 96m
+    mem_reservation: 32m
+    pids_limit: 64
+
+    depends_on:
+      - sms-webhook
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "3m"
+        max-file: "2"
+
+
+  sms-webhook:
+    build:
+      context: ./sms-webhook
+
+    container_name: sms-webhook
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    expose:
+      - "8000"
+
+    cpus: "0.10"
+    mem_limit: 64m
+    mem_reservation: 16m
+    pids_limit: 32
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "2m"
+        max-file: "2"

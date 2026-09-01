@@ -1,0 +1,79 @@
+storage:
+  type: sqlite
+  path: /data/gatus.db
+
+ui:
+  title: Mooyrag Uptime
+
+alerting:
+  custom:
+    url: "http://sms-webhook:8000/alert"
+    method: POST
+    headers:
+      Content-Type: application/json
+      X-API-Key: "${SMS_WEBHOOK_API_KEY}"
+    body: |
+      {
+        "message": "[ALERT_TRIGGERED_OR_RESOLVED]: [ENDPOINT_NAME] - [ENDPOINT_URL]"
+      }
+
+endpoints:
+  - name: Mooyrag Main
+    group: websites
+    url: "https://mooyrag.com"
+    interval: 60s
+
+    client:
+      timeout: 8s
+
+    conditions:
+      - "[STATUS] >= 200"
+      - "[STATUS] < 400"
+      - "[RESPONSE_TIME] < 3000"
+
+    alerts:
+      - type: custom
+        enabled: true
+        failure-threshold: 3
+        success-threshold: 2
+        send-on-resolved: true
+
+  - name: Mooyrag Beasy
+    group: websites
+    url: "https://mooyrag.com/beasy"
+    interval: 60s
+
+    client:
+      timeout: 8s
+
+    conditions:
+      - "[STATUS] >= 200"
+      - "[STATUS] < 400"
+      - "[RESPONSE_TIME] < 3000"
+
+    alerts:
+      - type: custom
+        enabled: true
+        failure-threshold: 3
+        success-threshold: 2
+        send-on-resolved: true
+
+  - name: Mooyrag Corp
+    group: websites
+    url: "https://corp.mooyrag.com"
+    interval: 60s
+
+    client:
+      timeout: 8s
+
+    conditions:
+      - "[STATUS] >= 200"
+      - "[STATUS] < 400"
+      - "[RESPONSE_TIME] < 3000"
+
+    alerts:
+      - type: custom
+        enabled: true
+        failure-threshold: 3
+        success-threshold: 2
+        send-on-resolved: true
