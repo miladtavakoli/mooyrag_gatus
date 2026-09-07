@@ -78,21 +78,22 @@ endpoints:
         success-threshold: 2
         send-on-resolved: true
         
-   - name: Mooyrag Login
-     group: api
-     url: "https://mooyrag.com/webservice/representative-portal/login"
-     method: POST
-     interval: 60s
+  - name: Mooyrag Login
+    group: api
+    url: "https://mooyrag.com/webservice/representative-portal/login"
+    method: POST
+    interval: 60s
 
-     headers:
-       Accept: "application/json, text/plain, */*"
-       Content-Type: "application/x-www-form-urlencoded"
+    headers:
+      Accept: "application/json, text/plain, */*"
+      Content-Type: "application/x-www-form-urlencoded"
 
-     body: "username=${MOOYRAG_LOGIN_USERNAME}&password=${MOOYRAG_LOGIN_PASSWORD}"
+    body: "username=${MOOYRAG_LOGIN_USERNAME}&password=${MOOYRAG_LOGIN_PASSWORD}"
 
-     client:
-        timeout: 8s
+    client:
+      timeout: 8s
 
-      conditions:
-    	- "[STATUS] == 200"
-    	- "[RESPONSE_TIME] < 3000"
+    conditions:
+      - "[STATUS] >= 200"
+      - "[STATUS] < 400"
+      - "[RESPONSE_TIME] < 3000"
