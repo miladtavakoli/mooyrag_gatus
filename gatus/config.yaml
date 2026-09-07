@@ -78,37 +78,21 @@ endpoints:
         success-threshold: 2
         send-on-resolved: true
         
-  - name: Mooyrag Login
-    group: api
-    url: "https://mooyrag.com/webservice/representative-portal/login"
-    method: POST
-    interval: 60s
+   - name: Mooyrag Login
+     group: api
+     url: "https://mooyrag.com/webservice/representative-portal/login"
+     method: POST
+     interval: 60s
 
-    headers:
-      Accept: "application/json, text/plain, */*"
-      Content-Type: "multipart/form-data; boundary=gatus-boundary"
+     headers:
+       Accept: "application/json, text/plain, */*"
+       Content-Type: "application/x-www-form-urlencoded"
 
-    body: |
-      --gatus-boundary
-      Content-Disposition: form-data; name="username"
+     body: "username=${MOOYRAG_LOGIN_USERNAME}&password=${MOOYRAG_LOGIN_PASSWORD}"
 
-      ${MOOYRAG_LOGIN_USERNAME}
-      --gatus-boundary
-      Content-Disposition: form-data; name="password"
+     client:
+        timeout: 8s
 
-      ${MOOYRAG_LOGIN_PASSWORD}
-      --gatus-boundary--
-
-    client:
-      timeout: 8s
-
-    conditions:
-      - "[STATUS] == 200"
-      - "[RESPONSE_TIME] < 3000"
-
-    alerts:
-      - type: custom
-        enabled: true
-        failure-threshold: 3
-        success-threshold: 2
-        send-on-resolved: true
+      conditions:
+    	- "[STATUS] == 200"
+    	- "[RESPONSE_TIME] < 3000"
